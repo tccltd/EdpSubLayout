@@ -1,11 +1,13 @@
 <?php
 namespace EdpSubLayout;
 
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
-class Module extends AbstractPlugin
+class Module extends AbstractPlugin implements ControllerPluginProviderInterface, BootstrapListenerInterface
 {
     protected $template;
 
@@ -33,13 +35,11 @@ class Module extends AbstractPlugin
         $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), -50);
     }
 
-    public function getConfig()
+    public function getControllerPluginConfig()
     {
         return array(
-            'controller_plugins' => array(
-                'services' => array(
-                    'subLayout' => $this,
-                ),
+            'services' => array(
+                'subLayout' => $this,
             ),
         );
     }
